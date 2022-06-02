@@ -8,7 +8,11 @@ import AllProducts from '../components/Product/AllProducts';
 
 
 
+
 const HomePage = () => {
+
+	
+
   return (
 
 <Fragment>

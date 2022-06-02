@@ -113,13 +113,23 @@ const formHandler =(event) =>{
 		subject: [{"value":subject}],
 		message: [{"value":message}]
 		};
-	sendRequest(ContactData);
+// console.log(ContactData);
+		if(name === '' ||email === '' || phone === '' || subject === '' || message === ''){
+			console.log('empty');
+		}
+		else{
+			// console.log('not empty');
+			sendRequest(ContactData);
+			toast.success("Success Notification !");
+        
+		}
+	
 
-  restNameInput();
-  restEmailInput();
-  restPhoneInput();
-  restSubjectInput();
-  restmsgInput();
+//   restNameInput();
+//   restEmailInput();
+//   restPhoneInput();
+//   restSubjectInput();
+//   restmsgInput();
 } 
 
     return (
@@ -137,7 +147,7 @@ const formHandler =(event) =>{
 					</div>
 				 	<div id="form_status"></div>
 					<div className="contact-form">
-						<form onSubmit={formHandler} id="fruitkha-contact" >
+						<form onSubmit={formHandler} id="fruitkha-contact">
 							<div className="row">
 									{/* Name  */}
 								<div className="col-md-6">

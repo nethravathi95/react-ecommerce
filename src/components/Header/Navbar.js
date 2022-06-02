@@ -6,8 +6,20 @@ import CartItems from '../Cart/CartItems';
 import Modal from '../Modal';
 import CartButton from './CartButton';
 import CartContext from '../../store/cart-context';
+import AuthContext from '../../store/auth-context';
 
 const Navbar = () =>{
+  const authCtx = useContext(AuthContext);
+
+  const isLoggedIn = authCtx.isLoggedIn;
+  console.log( authCtx.isLoggedIn + ' from navbar');
+
+  const logoutHandler = () =>{
+    authCtx.logout();
+  }
+
+  // console.log(authCtx.ac + 'from context');
+
   const cartCtx = useContext(CartContext);
 	const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
 
@@ -74,9 +86,25 @@ const Navbar = () =>{
           <li className="nav-item">
             <NavLink className="nav-link" to="/shop">shop</NavLink>
           </li>
-          {/* <li className="nav-item">
-            <NavLink className="nav-link" to="/login">login</NavLink>
-          </li> */}
+          {!isLoggedIn &&  <li className="nav-item">
+            <NavLink className="nav-link" to='/login'>Login</NavLink>
+          </li>}
+         
+          {isLoggedIn &&  <li className="nav-item">
+            <NavLink className="nav-link" to='/profile'>Profile</NavLink>
+          </li>
+
+          }
+         {
+           isLoggedIn && 
+           <li>
+           <NavLink className="nav-link" to='/' onClick={logoutHandler}>
+             Logout
+             </NavLink>
+         </li>
+         }
+         
+      
          
         </ul>
         

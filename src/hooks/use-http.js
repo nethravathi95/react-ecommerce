@@ -16,7 +16,13 @@ function httpReducer(state, action) {
       status: 'completed',
     };
   }
-
+  if (action.type === 'SUCCESS') {
+    return {
+      data: action.responseData,
+      error: null,
+      status: 'authenticated',
+    };
+  }
   if (action.type === 'ERROR') {
     return {
       data: null,

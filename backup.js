@@ -3,14 +3,9 @@ import { Link } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 import { useHistory } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
-let url = 'http://localhost/reactjs/oauth/authorize?client_id=7c49c444-5d02-4d5b-bafd-ef804ad69eea&scope=content_editor&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fdrupal&reactauth=signin%2Cdrupal&state';
-const Login = (props) =>{
-
-  
-
-
-  // console.log(props.userinfo);
+const Login = () =>{
     const history = useHistory();
 
     const usernameInputRef = useRef();
@@ -18,13 +13,9 @@ const Login = (props) =>{
 
     const authCtx = useContext(AuthContext);
 
-
-    
     const [isLogin, setIsLogin] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    if(isLogin == 'false'){ 
-      history.replace('/dashboard');
-    }
+  
     const switchAuthModeHandler = () => {
       setIsLogin((prevState) => !prevState);
     };
@@ -33,17 +24,11 @@ const Login = (props) =>{
         event.preventDefault();
     const enteredUserName = usernameInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
-
-    if(enteredUserName === '' || enteredPassword === ''){
-
-      alert('input fields required');
-      return ;
-    }
   setIsLoading(true);
 
   const formData = new URLSearchParams();
   formData.append('grant_type', 'password');
-  formData.append('client_id', '7c49c444-5d02-4d5b-bafd-ef804ad69eea');
+  formData.append('client_id', '7ef57b4a-7ae3-42cf-b9aa-f873e1d11184');
   formData.append('client_secret', 12345);
   formData.append('scope', 'content_editor');
   formData.append('username', enteredUserName);
@@ -94,10 +79,14 @@ const Login = (props) =>{
         }).then((data) => {
             console.log(data.expires_in);
             
-            const decoded = jwt_decode(data.access_token)
-            // console.log(data.expires_in);
-         
-         
+            // const decoded = jwt_decode(data.access_token)
+            // console.log(decoded);
+           
+            // const { exp } = jwtDecode(data.access_token)
+            // console.log(exp);
+            if (Date.now() < data.expires_in) {
+              return data.access_token
+            }
             return  refreshAccessToken(data.refresh_token)
 
             
@@ -112,7 +101,7 @@ const Login = (props) =>{
   
      
     formData.append('grant_type', 'refresh_token');
-    formData.append('client_id', '7c49c444-5d02-4d5b-bafd-ef804ad69eea');
+    formData.append('client_id', '7ef57b4a-7ae3-42cf-b9aa-f873e1d11184');
     formData.append('client_secret', 12345);
     formData.append("refresh_token", token)
   
@@ -174,22 +163,8 @@ const Login = (props) =>{
   return refreshToken;
      
   }
-//   const intervalRef = useRef();
-//   const getToken = useCallback(() => {
-//       // Get new token if and only if existing token is available
-//       if (localStorage.getItem("access_token") != null) {
-//           // getNewUserToken();
-//           console.log('reafreh token');
-//       }
-//   }, []);
 
-//   useEffect(() => {
-//     // const interval = setInterval(() => getToken(), 1000 * 60 * 6); // 6 minutes interval as our token will expire after 7 minutes.
-//     const interval = setInterval(() => getToken(), 1000); // 6 minutes interval as our token will expire after 7 minutes.
-//     intervalRef.current = interval;
-//     return () => clearInterval(interval);
-// }, [getToken]);
-   
+  
     return <Fragment>
       
      <section className="login-section">
@@ -220,12 +195,12 @@ const Login = (props) =>{
                <form onSubmit={submitHandler}>
                <div className="form-group mb-3">
                         {/* <label className="label">USERNAME</label> */}
-                            <input type="text" required className="form-control" placeholder="Username" ref={usernameInputRef} required=""/>
+                            <input type="text" className="form-control" placeholder="Username" ref={usernameInputRef} required=""/>
                     </div>
                     <div className="form-group mb-3">
                    
                         {/* <label className="label">PASSWORD</label> */}
-                            <input type="password" required className="form-control" placeholder="password" ref={passwordInputRef} required=""/>
+                            <input type="password" className="form-control" placeholder="password" ref={passwordInputRef} required=""/>
                             <Link to="#" >Forgot password?</Link>
                     </div>
                     <div className="form-group">
@@ -238,7 +213,7 @@ const Login = (props) =>{
                     </div>
                     
                     <div className="sign-up">
-                    <Link target="_blank" to={ `//localhost/reactjs/oauth/authorize?client_id=7c49c444-5d02-4d5b-bafd-ef804ad69eea&scope=content_editor&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fdrupal&reactauth=signin%2Cdrupal&state` } className="form-control btn btn-primary rounded submit mt-2 px-3">Sign in with ReactJs for Drupal</Link>
+                        
 					{/* Don't have an account? <a href="#">Create One</a> */}
 				</div>
                </form>
